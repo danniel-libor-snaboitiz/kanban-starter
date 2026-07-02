@@ -26,6 +26,12 @@
             </div>
 
             <div>
+                <label for="username" class="block text-sm font-medium">Username</label>
+                <input id="username" name="username" type="text" value="{{ old('username') }}" required
+                    class="mt-1 w-full rounded border px-3 py-2" placeholder="used for @mentions">
+            </div>
+
+            <div>
                 <label for="email" class="block text-sm font-medium">Email</label>
                 <input id="email" name="email" type="email" value="{{ old('email') }}" required
                     class="mt-1 w-full rounded border px-3 py-2">
