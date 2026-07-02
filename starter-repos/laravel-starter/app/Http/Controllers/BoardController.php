@@ -51,6 +51,8 @@ class BoardController extends Controller
      */
     public function show(Board $board): View
     {
+        $this->authorizeBoard($board);
+
         $board->load(['columns' => fn ($q) => $q->orderBy('position'), 'columns.cards' => fn ($q) => $q->orderBy('position')]);
 
         return view('boards.show', ['board' => $board]);
@@ -61,6 +63,8 @@ class BoardController extends Controller
      */
     public function update(Request $request, Board $board): RedirectResponse
     {
+        $this->authorizeBoard($board);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
         ]);
@@ -75,8 +79,18 @@ class BoardController extends Controller
      */
     public function destroy(Board $board): RedirectResponse
     {
+        $this->authorizeBoard($board);
+
         $board->delete();
 
         return redirect()->route('boards.index');
+    }
+
+    /**
+     * Ensure the board belongs to the authenticated user.
+     */
+    protected function authorizeBoard(Board $board): void
+    {
+        abort_unless($board->user_id === Auth::id(), 403);
     }
 }

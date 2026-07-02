@@ -16,6 +16,8 @@ class CommentController extends Controller
      */
     public function store(Request $request, Card $card): RedirectResponse
     {
+        abort_unless($card->column->board->user_id === Auth::id(), 403);
+
         $data = $request->validate([
             'body' => ['required', 'string'],
         ]);

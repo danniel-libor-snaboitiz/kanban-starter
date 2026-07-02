@@ -6,6 +6,7 @@ use App\Models\Board;
 use App\Models\Column;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ColumnController extends Controller
 {
@@ -14,6 +15,8 @@ class ColumnController extends Controller
      */
     public function store(Request $request, Board $board): RedirectResponse
     {
+        abort_unless($board->user_id === Auth::id(), 403);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
         ]);
@@ -31,6 +34,8 @@ class ColumnController extends Controller
      */
     public function update(Request $request, Column $column): RedirectResponse
     {
+        $this->authorizeColumn($column);
+
         $data = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'position' => ['sometimes', 'integer', 'min:0'],
@@ -46,9 +51,19 @@ class ColumnController extends Controller
      */
     public function destroy(Column $column): RedirectResponse
     {
+        $this->authorizeColumn($column);
+
         $boardId = $column->board_id;
         $column->delete();
 
         return redirect()->route('boards.show', $boardId);
+    }
+
+    /**
+     * Ensure the column's board belongs to the authenticated user.
+     */
+    protected function authorizeColumn(Column $column): void
+    {
+        abort_unless($column->board->user_id === Auth::id(), 403);
     }
 }

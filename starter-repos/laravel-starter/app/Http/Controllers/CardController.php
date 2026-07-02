@@ -6,6 +6,7 @@ use App\Models\Card;
 use App\Models\Column;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -16,6 +17,8 @@ class CardController extends Controller
      */
     public function store(Request $request, Column $column): RedirectResponse
     {
+        abort_unless($column->board->user_id === Auth::id(), 403);
+
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -35,6 +38,8 @@ class CardController extends Controller
      */
     public function show(Card $card): View
     {
+        $this->authorizeCard($card);
+
         $card->load(['column.board', 'comments.user']);
 
         return view('cards.show', ['card' => $card]);
@@ -45,6 +50,8 @@ class CardController extends Controller
      */
     public function update(Request $request, Card $card): RedirectResponse
     {
+        $this->authorizeCard($card);
+
         $data = $request->validate([
             'title' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -71,9 +78,19 @@ class CardController extends Controller
      */
     public function destroy(Card $card): RedirectResponse
     {
+        $this->authorizeCard($card);
+
         $boardId = $card->column->board_id;
         $card->delete();
 
         return redirect()->route('boards.show', $boardId);
+    }
+
+    /**
+     * Ensure the card's board (via column) belongs to the authenticated user.
+     */
+    protected function authorizeCard(Card $card): void
+    {
+        abort_unless($card->column->board->user_id === Auth::id(), 403);
     }
 }

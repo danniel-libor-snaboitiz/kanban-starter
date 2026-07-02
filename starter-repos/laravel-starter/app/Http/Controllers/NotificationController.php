@@ -28,6 +28,8 @@ class NotificationController extends Controller
      */
     public function update(Notification $notification): RedirectResponse
     {
+        abort_unless($notification->user_id === Auth::id(), 403);
+
         $notification->update(['read_at' => now()]);
 
         return redirect()->route('cards.show', $notification->card_id);
