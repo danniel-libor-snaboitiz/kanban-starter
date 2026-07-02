@@ -18,6 +18,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
     ];
@@ -51,5 +52,21 @@ class User extends Authenticatable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * Boards owned by the user.
+     */
+    public function boards(): HasMany
+    {
+        return $this->hasMany(Board::class);
+    }
+
+    /**
+     * Notifications the user has received.
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
     }
 }
