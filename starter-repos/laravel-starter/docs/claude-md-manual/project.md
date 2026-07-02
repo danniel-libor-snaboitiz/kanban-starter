@@ -14,8 +14,8 @@ built on top of a minimal Laravel `Task` CRUD starter. Domain being added:
 ## Stack (what's actually installed — don't assume older versions)
 
 - PHP **8.5**, Laravel **12** (streamlined structure), PHPUnit **11**.
-- UI is plain **Blade + Tailwind** (CDN). No Filament, no Livewire, no npm build —
-  Filament was removed from this starter, so don't reach for admin-panel scaffolding.
+- UI is plain **Blade + Tailwind** (CDN). No admin-panel scaffolding, no npm
+  build — build views as plain Blade templates.
 - Laravel **Boost** MCP server is configured (`.mcp.json`, `boost.json`).
 - SQLite everywhere.
 

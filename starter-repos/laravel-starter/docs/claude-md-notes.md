@@ -35,9 +35,9 @@ what matters or what I'm about to build. My manual file adds:
   aborts the entire run. That surfaced only by running the suite (it failed on a
   fresh checkout), not by scanning files — exactly the kind of hard-won fact a
   human adds and a scan omits.
-- **Corrections.** `/init` first labeled Pint as "PSR-12". The starter also
-  shipped with Filament + Livewire, which I removed (the assignment UI is plain
-  Blade + Tailwind), so I dropped those from the stack listing too.
+- **Corrections.** `/init` first labeled Pint as "PSR-12", and over-listed UI
+  packages the app doesn't actually use; I trimmed the stack to what's really
+  here — plain Blade + Tailwind, no extra admin-panel framework.
 
 Net: I edited the generated file rather than shipping it as-is — deleting generic
 lines, and adding the two or three things a fresh model would never guess. Raw
