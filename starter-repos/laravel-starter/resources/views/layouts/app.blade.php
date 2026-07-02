@@ -13,6 +13,13 @@
             <a href="{{ url('/') }}" class="font-semibold">{{ config('app.name') }}</a>
             <div class="flex items-center gap-4 text-sm">
                 @auth
+                    <a href="{{ route('boards.index') }}" class="text-gray-700 hover:text-black">Boards</a>
+                    <a href="{{ route('notifications.index') }}" class="text-gray-700 hover:text-black">
+                        Notifications
+                        @if (($unreadCount ?? 0) > 0)
+                            <span class="ml-1 rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">{{ $unreadCount }}</span>
+                        @endif
+                    </a>
                     <a href="{{ route('tasks.index') }}" class="text-gray-700 hover:text-black">Tasks</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
