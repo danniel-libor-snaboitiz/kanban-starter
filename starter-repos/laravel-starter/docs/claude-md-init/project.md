@@ -37,8 +37,6 @@ php artisan queue:work      # QUEUE_CONNECTION defaults to sync
 
 - **PHP** 8.5
 - **Laravel** 12 (streamlined application structure)
-- **filament/filament** v5 (admin panel scaffolding)
-- **livewire/livewire** v4
 - **laravel/sanctum** v4
 - **laravel/boost** v2 (MCP server; see `.mcp.json`)
 - **laravel/pint** v1 (formatter)
@@ -59,7 +57,6 @@ app/
     User.php              # hasMany Task; Notifiable
   Providers/
     AppServiceProvider.php
-    Filament/AppPanelProvider.php
 bootstrap/
   app.php                 # middleware, exceptions, routing (Laravel 11/12 style)
   providers.php

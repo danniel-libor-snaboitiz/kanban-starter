@@ -7,8 +7,8 @@ ones (`docs/claude-md-init/`), and what I changed and why.
 
 `/init` is genuinely good at the *inventory*. It correctly scanned and reported:
 
-- the real installed versions (PHP 8.5, Laravel 12, Filament v5, PHPUnit 11) —
-  notably newer than the course README implies;
+- the real installed versions (PHP 8.5, Laravel 12, PHPUnit 11) — notably newer
+  than the course README implies;
 - the directory layout, routes, models, and relationships;
 - the in-memory-SQLite test setup from `phpunit.xml`;
 - the exact existing test and the single `UserFactory`.
@@ -35,9 +35,9 @@ what matters or what I'm about to build. My manual file adds:
   aborts the entire run. That surfaced only by running the suite (it failed on a
   fresh checkout), not by scanning files — exactly the kind of hard-won fact a
   human adds and a scan omits.
-- **Corrections.** `/init` first labeled Pint as "PSR-12" and leaned toward
-  treating Filament as the UI layer; the assignment UI is plain Blade, so I
-  trimmed that emphasis.
+- **Corrections.** `/init` first labeled Pint as "PSR-12". The starter also
+  shipped with Filament + Livewire, which I removed (the assignment UI is plain
+  Blade + Tailwind), so I dropped those from the stack listing too.
 
 Net: I edited the generated file rather than shipping it as-is — deleting generic
 lines, and adding the two or three things a fresh model would never guess. Raw
