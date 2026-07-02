@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "claude-sdlc-team@danniel-claude-plugins": true,
+    "superpowers@claude-plugins-official": true
+  }
+}

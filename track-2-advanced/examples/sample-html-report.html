@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workflow Report — Automation Rules Engine</title>
+<style>
+  :root {
+    --ink: #111418;
+    --muted: #5b6472;
+    --line: #d8dde5;
+    --accent: #1f4fd8;
+    --bg: #ffffff;
+    --panel: #f6f7f9;
+    --good: #14764a;
+    --warn: #a35a00;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 48px 64px 96px;
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  header { border-bottom: 1px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  header .sub { color: var(--muted); font-size: 14px; }
+  h2 {
+    font-size: 18px;
+    margin: 40px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    letter-spacing: -0.005em;
+  }
+  h3 { font-size: 15px; margin: 20px 0 8px; color: var(--ink); }
+  p, li { color: var(--ink); }
+  .muted { color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--panel); font-weight: 600; }
+  pre {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    font: 13px/1.5 "SF Mono", Menlo, Consolas, monospace;
+    color: var(--ink);
+  }
+  code { font: 13px "SF Mono", Menlo, Consolas, monospace; background: var(--panel); padding: 1px 4px; border-radius: 3px; }
+  .screenshot {
+    border: 1px dashed var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    padding: 40px 12px;
+    text-align: center;
+    border-radius: 6px;
+    margin: 10px 0 4px;
+    font-size: 13px;
+  }
+  .screenshot-caption { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--panel);
+    color: var(--muted);
+    border: 1px solid var(--line);
+    margin-right: 6px;
+  }
+  .pill.good { color: var(--good); border-color: #b7e0cb; background: #eaf7f0; }
+  .pill.warn { color: var(--warn); border-color: #f0d5b0; background: #fbf1e2; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .flow {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px;
+    font: 12px/1.5 "SF Mono", Menlo, Consolas, monospace;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Workflow Report — Automation Rules Engine</h1>
+  <div class="sub">Track 2: Advanced &middot; Submitted April 24, 2026 &middot; Priya Ramanathan</div>
+</header>
+
+<section id="s1">
+  <h2>1. Agents &amp; Plugins Used</h2>
+  <p>Six distinct agent or plugin invocations shaped this deliverable. Each is listed with the artifact it produced or reviewed and why it was chosen for that step.</p>
+  <table>
+    <thead>
+      <tr><th>Agent / Plugin</th><th>Phase</th><th>Artifact</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Plan mode (built-in)</td>
+        <td>Planning</td>
+        <td><code>docs/plan.md</code> (draft)</td>
+        <td>Native dependency-ordered planner. Picked for the first pass because it produces a plan tightly coupled to the repo layout.</td>
+      </tr>
+      <tr>
+        <td>general-purpose (plan reviewer)</td>
+        <td>Plan review</td>
+        <td><code>docs/plan-review.md</code></td>
+        <td>Cold-context second opinion. Explicitly told to critique, not agree. Caught the retry-test ambiguity.</td>
+      </tr>
+      <tr>
+        <td>general-purpose (architecture author)</td>
+        <td>Architecture</td>
+        <td><code>docs/architecture.md</code> (draft)</td>
+        <td>Broader reasoning surface for tradeoff sections than Plan mode gives.</td>
+      </tr>
+      <tr>
+        <td>superpowers plugin</td>
+        <td>Architecture rigor pass</td>
+        <td>Revisions to <code>docs/architecture.md</code></td>
+        <td>Invoked <code>/superpowers:audit-architecture</code>. Its invariants pass surfaced the missing "actions must not roll back" invariant that I then made explicit.</td>
+      </tr>
+      <tr>
+        <td>general-purpose (architecture reviewer)</td>
+        <td>Architecture review</td>
+        <td><code>docs/architecture-review.md</code></td>
+        <td>Cross-checked architecture against plan step by step. Flagged one inconsistency in the retry policy (see reflection).</td>
+      </tr>
+      <tr>
+        <td>code-reviewer (built-in)</td>
+        <td>Implementation review</td>
+        <td>Review comments on PR #4</td>
+        <td>Final pass over the matcher and executor implementations before merge to main.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s2">
+  <h2>2. Plan &amp; Architecture</h2>
+  <p>Both documents live in <code>docs/</code>. Short excerpts below; full files are linked at the top of the repo README.</p>
+
+  <h3>docs/plan.md (excerpt)</h3>
+  <pre>### 5. Webhook action + retry ladder (60 min)
+- notify_webhook uses the Laravel Http client.
+- Exponential backoff schedule: 1s, 4s, 16s. Cap 3 attempts total.
+- Every attempt recorded in webhook_attempts.
+- TDD. Use Http::fake to assert the retry schedule &mdash; both the attempt
+  count and the intervals. See reviewer's note below.
+- Risk: medium &mdash; mocking backoff timers cleanly is fiddly.
+- Depends on: 4.</pre>
+
+  <h3>docs/architecture.md (excerpt)</h3>
+  <pre>## Retry policy
+Exponential ladder with jitter to avoid thundering-herd retries against a
+struggling webhook target.
+- Attempt 1: immediate.
+- Attempt 2: 1s &plusmn; 250ms.
+- Attempt 3: 4s &plusmn; 1s.
+- Cap: 3 attempts total.
+Every attempt writes a WebhookAttempt row regardless of outcome.</pre>
+</section>
+
+<section id="s3">
+  <h2>3. Test Results</h2>
+  <p>All suites green on the final commit. Coverage report generated with <code>php artisan test --coverage-html report/coverage/</code>.</p>
+  <table>
+    <thead>
+      <tr><th>Test file</th><th>Tests</th><th>Passed</th><th>Duration</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>tests/Unit/RuleTreeValidatorTest.php</code></td><td>11</td><td>11</td><td>0.14 s</td></tr>
+      <tr><td><code>tests/Unit/MatcherTest.php</code></td><td>14</td><td>14</td><td>0.19 s</td></tr>
+      <tr><td><code>tests/Unit/ActionRunnerTest.php</code></td><td>9</td><td>9</td><td>0.22 s</td></tr>
+      <tr><td><code>tests/Unit/WebhookRetryScheduleTest.php</code></td><td>6</td><td>6</td><td>0.11 s</td></tr>
+      <tr><td><code>tests/Feature/EvaluateRuleJobTest.php</code></td><td>5</td><td>5</td><td>1.36 s</td></tr>
+      <tr><td><code>tests/Feature/RuleBuilderTest.php</code></td><td>7</td><td>7</td><td>2.02 s</td></tr>
+      <tr><td><code>tests/Feature/DryRunTest.php</code></td><td>4</td><td>4</td><td>0.61 s</td></tr>
+      <tr><td colspan="4"><strong>Coverage:</strong> MatcherService 92% &middot; ActionRunner 88% &middot; RuleTreeValidator 100% &middot; Overall 84%</td></tr>
+    </tbody>
+  </table>
+  <div class="screenshot">[ Terminal screenshot: <code>php artisan test --coverage</code> output, all green ]</div>
+  <div class="screenshot-caption">Screenshot captured on the final commit. Full HTML coverage report is at <code>report/coverage/index.html</code>.</div>
+</section>
+
+<section id="s4">
+  <h2>4. Git Log Excerpt</h2>
+  <p>Chronological. Failing-test commits precede their implementation commits for all three TDD targets.</p>
+  <pre>a91f2e0 chore: scaffold from laravel-starter, docker compose up
+c14b8a1 docs: user + project CLAUDE.md (manual + /init)
+7fc0dd4 docs: design brief with condition-builder wireframe
+6e1a5b3 docs: plan.md via Plan agent
+4f823e9 docs: plan-review.md via general-purpose reviewer subagent
+2d0f8c7 docs: plan.md revised per review (retry-test intervals)
+0b6741e docs: architecture.md via general-purpose subagent + superpowers rigor pass
+1a5c3d8 docs: architecture-review.md via general-purpose reviewer
+9e2b7f0 test: failing RuleTreeValidator cases (leaf, nested, depth guard)
+3c8a1d2 feat: RuleTreeValidator passing all cases
+b52ef77 test: failing MatcherService cases (10 including nested + depth)
+44adf19 feat: MatcherService recursive short-circuit implementation
+0d17c94 test: failing ActionRunner order-of-execution + isolation cases
+518e2ab feat: ActionRunner with per-action outcome recording
+7ab30ce test: failing WebhookRetryScheduleTest (asserts count AND intervals)
+1c9b4f5 feat: exponential backoff with jitter, WebhookAttempt logging
+83f2019 feat: EvaluateRuleJob wiring matcher + runner on rules queue
+e6a1dcc feat: Livewire rule builder + dry-run panel
+20c5b8a chore: coverage report exported to report/coverage/
+db98371 docs: workflow-report.html</pre>
+</section>
+
+<section id="s5">
+  <h2>5. Built UI</h2>
+  <div class="grid">
+    <div>
+      <div class="screenshot" style="padding: 64px 8px;">Rules list</div>
+      <div class="screenshot-caption">Table with active toggle, event, last-fired timestamp.</div>
+    </div>
+    <div>
+      <div class="screenshot" style="padding: 64px 8px;">Nested condition builder</div>
+      <div class="screenshot-caption">Two levels of nesting with add-group and add-leaf affordances.</div>
+    </div>
+    <div>
+      <div class="screenshot" style="padding: 64px 8px;">Dry-run panel</div>
+      <div class="screenshot-caption">Matched leaves highlighted; would-fire actions listed below.</div>
+    </div>
+  </div>
+</section>
+
+<section id="s6">
+  <h2>6. Reflection</h2>
+  <p>The architecture reviewer caught a subtle inconsistency I had missed: my draft said "retry with exponential backoff up to 3 attempts" without specifying intervals, but the plan already committed to 1s / 4s / 16s — the docs were quietly at odds. Fixing it before implementation saved me from a test that would have been ambiguous to write. Next time I would set up the queue and worker before writing the matcher; I had to context-switch back to plumbing halfway through the TDD loop, and the interruption cost more than the queue setup would have. My honest gotcha was mocking exponential backoff: my first attempt asserted only <code>Http::fake()-&gt;wasSent(3)</code>, which passes even if all three attempts happen in the same tick — the reviewer's flag on that was well-earned. The <code>superpowers</code> plugin's outline pass caught a missing invariant ("actions must not roll back other actions in the same run") that I had internalized but never written down, and having it in the architecture doc made the executor tests obvious.</p>
+</section>
+
+<section id="s7">
+  <h2>7. Subagent Orchestration Diagram</h2>
+  <div class="flow">Plan mode
+   |
+   v
+docs/plan.md (draft)
+   |
+   +---> general-purpose (reviewer, cold context)
+   |         |
+   |         v
+   |     docs/plan-review.md
+   |         |
+   |         v
+   +---> docs/plan.md (revised, integrates review)
+             |
+             v
+general-purpose (architecture author)
+   |
+   +---> superpowers plugin (/superpowers:audit-architecture)
+             |
+             v
+docs/architecture.md
+   |
+   +---> general-purpose (reviewer, checks vs. plan)
+   |         |
+   |         v
+   |     docs/architecture-review.md
+   |         |
+   |         v
+   +---> implementation phase (TDD)
+             |
+             v
+         code-reviewer (built-in) on PR #4
+             |
+             v
+         merge to main</div>
+  <p class="muted">Each arrow that leaves a document represents an artifact committed to <code>docs/</code>. Each subagent invocation was named in the commit message so the log can be audited without opening the docs.</p>
+</section>
+
+<section id="s8">
+  <h2>8. Plugin Usage Evidence</h2>
+  <p>The <code>superpowers</code> plugin's <code>/superpowers:audit-architecture</code> command was invoked against the architecture draft. Its output is what caused me to add the retry-jitter section and the "actions must not roll back" invariant to the final doc. The pill below marks which sections of the architecture doc were revised as a direct result.</p>
+  <div>
+    <span class="pill">superpowers</span>
+    <span class="pill good">Retry policy — jitter added</span>
+    <span class="pill good">Rejected alternatives — expanded</span>
+    <span class="pill warn">Consistency-with-plan cross-check — added</span>
+  </div>
+  <div class="screenshot" style="padding: 56px 8px; margin-top: 12px;">[ Screenshot: /superpowers:audit-architecture invocation and its output panel ]</div>
+  <pre>$ /superpowers:audit-architecture docs/architecture.md
+
+[audit-architecture] Reading docs/architecture.md ...
+[audit-architecture] Cross-referencing docs/plan.md ...
+[audit-architecture] Invariant scan:
+  - "actions run in order" ...................... stated
+  - "actions do not roll back peers" ............. IMPLIED, not stated
+  - "webhook retries are off request thread" ..... stated
+  - "condition tree has bounded depth" ........... stated (max 8)
+  - "every webhook attempt recorded" ............. stated
+[audit-architecture] Tradeoff coverage:
+  - nested vs. flat conditions ................... covered
+  - sync vs. queued evaluation ................... covered
+  - per-attempt vs. only-failure logging ......... covered
+  - retry jitter ................................. NOT DISCUSSED
+
+Suggested revisions:
+  1. Add an explicit invariant that a failing action does not
+     block or roll back subsequent actions in the same run.
+  2. Discuss jitter on the retry ladder; a fixed schedule
+     invites thundering-herd retries against a struggling target.
+  3. Add a "Consistency with the plan" section that names how
+     each plan step maps to an architecture section.</pre>
+  <p class="muted">All three suggestions were applied. Diffs live in commit <code>0b6741e</code>.</p>
+</section>
+
+</body>
+</html>

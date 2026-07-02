@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Workflow Report — Kanban with Comments</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --text: #222;
+      --muted: #666;
+      --border: #ddd;
+      --accent: #2b5aa6;
+      --panel: #fff;
+      --screenshot-bg: #eee;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+    main {
+      max-width: 780px;
+      margin: 40px auto;
+      padding: 0 24px 80px;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+    }
+    h1 {
+      font-size: 26px;
+      margin: 0 0 6px;
+      color: var(--text);
+    }
+    header .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    h2 {
+      font-size: 19px;
+      margin: 36px 0 12px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 20px 0 8px;
+    }
+    p, li { color: var(--text); }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--accent);
+    }
+    a:hover { text-decoration: underline; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 20px;
+      font-size: 14px;
+      background: var(--panel);
+    }
+    th, td {
+      text-align: left;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      background: #f2f2f2;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 16px;
+      border-left: 3px solid var(--border);
+      color: var(--muted);
+      background: var(--panel);
+      font-size: 14px;
+    }
+    pre {
+      background: #f4f4f4;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      border-radius: 3px;
+    }
+    .screenshot {
+      width: 100%;
+      height: 200px;
+      background: var(--screenshot-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 10px 0 6px;
+      border-radius: 3px;
+    }
+    .screenshot span { padding: 0 16px; text-align: center; }
+    .caption {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0 0 18px;
+      text-align: center;
+    }
+    footer {
+      margin-top: 60px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Workflow Report — Kanban with Comments &amp; @Mentions</h1>
+      <div class="subtitle">Track 1: Beginner &middot; Submitted April 24, 2026 &middot; Jamie Chen</div>
+    </header>
+
+    <section>
+      <h2>1. Agents &amp; Plugins Used</h2>
+      <p>I used three distinct agents across the workflow. Each was chosen deliberately for the phase it fit best.</p>
+      <table>
+        <thead>
+          <tr><th>Phase</th><th>Agent / Plugin</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Plan</td>
+            <td>Plan mode</td>
+            <td>I wanted a numbered breakdown with dependencies, not code. Plan mode returns a plan without touching files.</td>
+          </tr>
+          <tr>
+            <td>Architecture</td>
+            <td>general-purpose subagent</td>
+            <td>Architecture needed data-model diagrams, an API table, and tradeoff analysis. Delegating to a subagent kept my main context free of large exploratory output.</td>
+          </tr>
+          <tr>
+            <td>Implementation review</td>
+            <td>code-reviewer subagent</td>
+            <td>After each feature commit I asked a code-reviewer subagent to check the diff for authorization gaps. It caught one missing policy check on the card-move endpoint.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>2. Plan &amp; Architecture</h2>
+      <p>Full artifacts:</p>
+      <ul>
+        <li><a href="../docs/plan.md">docs/plan.md</a></li>
+        <li><a href="../docs/architecture.md">docs/architecture.md</a></li>
+      </ul>
+      <h3>Plan excerpt</h3>
+      <blockquote>
+        Step 5 &mdash; Mention parser service (20 min). Pure function <code>MentionParser::parse(string $body): array</code> returning <code>['@username', User|null]</code>. TDD required. Test cases: no mentions, one mention, two mentions, dot username, unknown username returns null.
+      </blockquote>
+      <h3>Architecture excerpt</h3>
+      <blockquote>
+        Chose to persist Notification rows at write time rather than re-parsing at read time. Persisted rows let us track <code>read_at</code> per recipient, and mean the feed query is a single indexed lookup instead of a scan across every comment.
+      </blockquote>
+    </section>
+
+    <section>
+      <h2>3. Test Results</h2>
+      <table>
+        <thead>
+          <tr><th>Test file</th><th>Tests</th><th>Passed</th><th>Duration</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>tests/Unit/MentionParserTest.php</td><td>5</td><td>5</td><td>0.04s</td></tr>
+          <tr><td>tests/Feature/BoardTest.php</td><td>6</td><td>6</td><td>0.31s</td></tr>
+          <tr><td>tests/Feature/ColumnTest.php</td><td>4</td><td>4</td><td>0.22s</td></tr>
+          <tr><td>tests/Feature/CardTest.php</td><td>5</td><td>5</td><td>0.28s</td></tr>
+          <tr><td>tests/Feature/NotificationTest.php</td><td>3</td><td>3</td><td>0.19s</td></tr>
+        </tbody>
+      </table>
+      <div class="screenshot"><span>Terminal screenshot: php artisan test &mdash; 23 passed</span></div>
+    </section>
+
+    <section>
+      <h2>4. Git Log Excerpt</h2>
+      <pre>a1b2c3d test: failing test for mention parser
+d4e5f6g feat: mention parser implementation
+7h8i9j0 test: failing test for notification creation on mention
+k1l2m3n feat: create Notification row for each resolved mention
+o4p5q6r test: failing test for board authorization policy
+s7t8u9v feat: BoardPolicy + authorize() calls in BoardController
+w1x2y3z test: failing test for card move endpoint
+b4c5d6e feat: PATCH /cards/{card}/move persists new column_id
+f7g8h9i refactor: extract mention regex to a class constant
+j1k2l3m docs: architecture doc and plan
+n4o5p6q chore: add unread badge to nav layout
+r7s8t9u docs: workflow-report.html</pre>
+    </section>
+
+    <section>
+      <h2>5. Built UI</h2>
+      <div class="screenshot"><span>Board view</span></div>
+      <p class="caption">Board view &mdash; three columns (Todo, Doing, Done) with several cards.</p>
+      <div class="screenshot"><span>Card with comment thread and mention</span></div>
+      <p class="caption">Card detail modal &mdash; comment thread with an <code>@jamie</code> mention linked to a profile route.</p>
+      <div class="screenshot"><span>Notifications feed</span></div>
+      <p class="caption">Notifications feed at <code>/notifications</code> &mdash; unread items appear first.</p>
+    </section>
+
+    <section>
+      <h2>6. Reflection</h2>
+      <p>
+        The planning subagent broke the work into finer steps than I would have on my own, and that turned out to be the single most useful artifact I produced &mdash; each step was small enough to complete in one focused sitting. If I did this again I would start TDD from step 1 instead of easing into it around the mention parser; writing the failing test for the authorization policy retrofit was noticeably harder than writing it first would have been. The one honest gotcha was the drag-drop UI: I budgeted 60 minutes for step 8 and it took closer to 95, mostly because HTML5 drag events fire in a surprising order and I lost time reading the spec. Overall the workflow felt slower than jumping in would have, but the artifacts made the final report almost write itself.
+      </p>
+    </section>
+
+    <footer>
+      Report generated by the student, not by Claude. April 24, 2026.
+    </footer>
+  </main>
+</body>
+</html>
